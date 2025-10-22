@@ -6,6 +6,9 @@ using namespace daisysp;
 
 class Tom {
 public:
+    Tom(int pitch) : basePitch(pitch) {
+    }
+
     void Init(float sampleRate) {
         osc.Init(sampleRate);
         osc.SetWaveform(osc.WAVE_SIN);
@@ -26,6 +29,7 @@ public:
     }
 
     void Trig() {
+        osc.Reset();
         ampEnv.Trig();
         pitchEnv.Trig();
     }

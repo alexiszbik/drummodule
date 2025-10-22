@@ -9,7 +9,9 @@ using namespace daisysp;
 
 // Declare a DaisySeed object called hardware
 DaisySeed  hardware;
-Tom tom;
+Tom toms[] = {Tom(44), Tom(48), Tom(52)};
+
+int drumCount = 3;
 
 MidiUartHandler midi;
 
@@ -24,7 +26,10 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         //Get the next envelope value
         //get the next oscillator sample
 
-        float osc_out = tom.Process();
+        float osc_out = 0;
+        for (int i = 0; i < drumCount; i++) {
+            osc_out += toms[i].Process();
+        }
 
         //Set the left and right outputs
         out[i]     = osc_out;
@@ -39,8 +44,13 @@ void HandleMidiMessage(MidiEvent m)
     if (m.type == NoteOn) {
         NoteOnEvent noteOn = m.AsNoteOn();
         bool gate = noteOn.velocity > 0;
+        
         if (gate) {
-            tom.Trig();
+            int pitch = noteOn.note;
+            static const int baseNote = 36;
+            if (pitch >= baseNote && pitch < (baseNote + drumCount)) {
+                toms[pitch - baseNote].Trig();
+            }
         }
     }
     else if (m.type == NoteOff) {
@@ -67,8 +77,10 @@ int main(void)
     //How many samples we'll output per second
     float sampleRate = hardware.AudioSampleRate();
 
-    tom.Init(sampleRate);
-
+    for (int i = 0; i < drumCount; i++) {
+        toms[i].Init(sampleRate);
+    }
+    
     //Start calling the audio callback
     hardware.StartAudio(AudioCallback);
 

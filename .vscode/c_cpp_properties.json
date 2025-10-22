@@ -31,7 +31,7 @@
         "${workspaceFolder}/../../libDaisy/**",
         "${workspaceFolder}/../../DaisySP/**"
       ],
-      "name": "macOS"
+      "name": "mac"
     }
   ],
   "version": 4
