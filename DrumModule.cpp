@@ -1,6 +1,8 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
+
 #include "Tom.h"
+#include "SinPerc.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -9,9 +11,9 @@ using namespace daisysp;
 
 // Declare a DaisySeed object called hardware
 DaisySeed  hardware;
-Tom toms[] = {Tom(44), Tom(48), Tom(52)};
 
-int drumCount = 3;
+DrumBase* drums[] = {new Tom(44), new Tom(48), new Tom(52), new SinPerc(60), new SinPerc(90)};
+int drumCount = sizeof(drums) / sizeof(drums[0]);
 
 MidiUartHandler midi;
 
@@ -28,7 +30,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         float osc_out = 0;
         for (int i = 0; i < drumCount; i++) {
-            osc_out += toms[i].Process();
+            osc_out += drums[i]->Process();
         }
 
         //Set the left and right outputs
@@ -49,7 +51,9 @@ void HandleMidiMessage(MidiEvent m)
             int pitch = noteOn.note;
             static const int baseNote = 36;
             if (pitch >= baseNote && pitch < (baseNote + drumCount)) {
-                toms[pitch - baseNote].Trig();
+                float velocity = noteOn.velocity / 127.f;
+                velocity *= velocity;
+                drums[pitch - baseNote]->Trig(velocity);
             }
         }
     }
@@ -78,7 +82,7 @@ int main(void)
     float sampleRate = hardware.AudioSampleRate();
 
     for (int i = 0; i < drumCount; i++) {
-        toms[i].Init(sampleRate);
+        drums[i]->Init(sampleRate);
     }
     
     //Start calling the audio callback

@@ -4,39 +4,33 @@
 
 using namespace daisysp;
 
-class Tom : public DrumBase {
+class SinPerc : public DrumBase {
 public:
-    Tom(int pitch) : DrumBase(), basePitch(pitch) {
+    SinPerc(int pitch) : DrumBase(), freq(mtof(pitch)) {
     }
 
     void Init(float sampleRate) override {
         osc.Init(sampleRate);
         osc.SetWaveform(osc.WAVE_SIN);
         osc.SetAmp(1.f);
-
-        pitchEnv.Init(sampleRate);
-        pitchEnv.SetTime(0.02);
+        osc.SetFreq(freq);
 
         ampEnv.Init(sampleRate);
-        ampEnv.SetTime(0.2);
+        ampEnv.SetTime(0.05);
     }
 
     float Process() override {
-        int pitch = basePitch + pitchEnv.Process() * 24;
-        osc.SetFreq(mtof(pitch));
         return osc.Process() * ampEnv.Process();
     }
 
-    void Trig(float velocity) override {
+    void Trig(float velocity)  override {
         osc.Reset();
         osc.SetAmp(velocity);
         ampEnv.Trig();
-        pitchEnv.Trig();
     }
 private:
     Oscillator osc; 
-    Decay pitchEnv;
     Decay ampEnv;
 
-    float basePitch = 48;
+    float freq = 440;
 };
