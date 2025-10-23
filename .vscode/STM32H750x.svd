@@ -39399,7 +39399,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
             <field>
               <name>LSEDRV</name>
-              <description>LSE oscillator driving
+              <description>LSEillator driving
               capability</description>
               <bitOffset>3</bitOffset>
               <bitWidth>2</bitWidth>

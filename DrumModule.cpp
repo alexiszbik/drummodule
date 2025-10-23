@@ -3,6 +3,9 @@
 
 #include "Tom.h"
 #include "SinPerc.h"
+#include "Rim.h"
+#include "Kick.h"
+#include "Shaker.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -12,7 +15,8 @@ using namespace daisysp;
 // Declare a DaisySeed object called hardware
 DaisySeed  hardware;
 
-DrumBase* drums[] = {new Tom(44), new Tom(48), new Tom(52), new SinPerc(60), new SinPerc(90)};
+DrumBase* drums[] = {new Kick(), new Rim(), new Shaker(), new Tom(40), new Tom(44), new Tom(48), new Tom(52), new SinPerc(64), new SinPerc(60), new SinPerc(96)};
+                     
 int drumCount = sizeof(drums) / sizeof(drums[0]);
 
 MidiUartHandler midi;
@@ -33,6 +37,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
             osc_out += drums[i]->Process();
         }
 
+        osc_out *= 0.707;
         //Set the left and right outputs
         out[i]     = osc_out;
         out[i + 1] = osc_out;

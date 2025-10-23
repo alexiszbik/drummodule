@@ -201,7 +201,7 @@ build/DrumModule.o: DrumModule.cpp \
  ../../DaisySP/Source/Utility/metro.h ../../DaisySP/Source/Utility/port.h \
  ../../DaisySP/Source/Utility/samplehold.h \
  ../../DaisySP/Source/Utility/smooth_random.h Tom.h DrumBase.h Decay.h \
- SinPerc.h
+ SinPerc.h Rim.h Kick.h Shaker.h AttackDecay.h
 ../../libdaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 ../../libdaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 ../../libdaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -439,3 +439,7 @@ Tom.h:
 DrumBase.h:
 Decay.h:
 SinPerc.h:
+Rim.h:
+Kick.h:
+Shaker.h:
+AttackDecay.h:

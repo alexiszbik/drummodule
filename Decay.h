@@ -19,7 +19,7 @@ public:
         }
         if (value > 0) {
             value = value - increment;
-            return value * value;
+            return fmaxf(value * value, 0);
         } else {
             return 0;
         }
