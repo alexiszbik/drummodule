@@ -1,10 +1,8 @@
 #pragma once
-
 #include "DrumBase.h"
+#include "Decay.h"
 
 using namespace daisysp;
-
-//TODO : velocity
 
 class Snare : public DrumBase {
 public:
@@ -12,20 +10,45 @@ public:
     }
 
     void Init(float sampleRate) override {
-        sd.Init(sampleRate);
+        noise.Init();
 
-        sd.SetSnappy(0.5f);
-        sd.SetAccent(0.5);
-        sd.SetDecay(0.5 );
+        osc.Init(sampleRate);
+        osc.SetWaveform(osc.WAVE_SIN);
+        osc.SetAmp(1.f);
+
+        pitchEnv.Init(sampleRate);
+        pitchEnv.SetTime(0.02);
+
+        ampEnv.Init(sampleRate);
+        ampEnv.SetTime(0.15);
+
+        hp.Init(sampleRate);
+        float hpFreq = 200;
+        hp.SetFreq(hpFreq);
     }
 
     float Process() override {
-        return sd.Process();
+        int pitch = basePitch + pitchEnv.Process() * 29;
+        osc.SetFreq(mtof(pitch));
+        float out = (osc.Process() + noise.Process()) * 0.707 * ampEnv.Process() * velocity;
+        return hp.Process(out);
     }
 
-    void Trig(float velocity)  override {
-        sd.Trig();
+    void Trig(float velocity) override {
+        osc.Reset();
+        ampEnv.Trig();
+        pitchEnv.Trig();
+        this->velocity = velocity;
     }
+
 private:
-    SyntheticSnareDrum sd;
+    Oscillator osc;
+    WhiteNoise noise; 
+    Decay pitchEnv;
+    Decay ampEnv;
+
+    ATone hp;
+
+    float basePitch = 50;
+    float velocity = 1.f;
 };
