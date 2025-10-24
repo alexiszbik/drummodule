@@ -9,5 +9,5 @@ public:
 
     virtual float Process() = 0;
 
-    virtual void Trig(float velocity)  = 0;
+    virtual void Trig(float velocity) = 0;
 };

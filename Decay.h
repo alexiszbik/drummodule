@@ -28,6 +28,11 @@ public:
     void Trig() {
         trig = true;    
     }
+
+    void Clean() {
+        value = 0;
+    }
+
 private:
     float sampleRate = 44100;
     float value = 0.f; 

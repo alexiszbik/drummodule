@@ -18,8 +18,10 @@ using namespace daisysp;
 // Declare a DaisySeed object called hardware
 DaisySeed  hardware;
 
+static const int baseNote = 36;
+
 DrumBase* drums[] = {new Kick(), new Snare(), new Rim(), new Clap(), new Hat(), new Hat(true), new Shaker(), new Tom(40), new Tom(44), new Tom(48), new Tom(52), new SinPerc(64), new SinPerc(60), new SinPerc(96)};
-   
+
 //Missing : hat hh, hh open, ride ?, cowbell ?
 
 int drumCount = sizeof(drums) / sizeof(drums[0]);
@@ -59,7 +61,7 @@ void HandleMidiMessage(MidiEvent m)
         
         if (gate) {
             int pitch = noteOn.note;
-            static const int baseNote = 36;
+            
             if (pitch >= baseNote && pitch < (baseNote + drumCount)) {
                 float velocity = noteOn.velocity / 127.f;
                 velocity *= velocity;
