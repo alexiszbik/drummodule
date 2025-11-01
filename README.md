@@ -32,3 +32,22 @@ Kind of emulate some 808 sounds.
 
 ![alt text](https://github.com/alexiszbik/drummodule/blob/main/drummodule_schematic.png?raw=true)
 
+
+## Component List
+
+1x Daisy Seed
+
+1x MIDI in socket
+
+1x Jack 6.35 socket
+
+1x 220 R
+
+1x 270 R
+
+1x 100nF
+
+1x H11L1 optocoupler
+
+1x 1n4148 diode
+
