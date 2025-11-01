@@ -12,6 +12,7 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "variant": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "vector": "cpp"
     }
 }

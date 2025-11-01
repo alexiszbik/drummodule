@@ -1,5 +1,6 @@
 #pragma once
 #include "DrumBase.h"
+#include "OscBank.h"
 #include "Decay.h"
 
 using namespace daisysp;
@@ -10,15 +11,7 @@ public:
     }
 
     void Init(float sampleRate) override {
-        for (int i = 0; i < oscCount; i++) {
-            oscs[i].Init(sampleRate);
-            oscs[i].SetWaveform(Oscillator::WAVE_SQUARE);
-            oscs[i].SetAmp(1.f);
-        }
-
-        mtof(60);
-        oscs[0].SetFreq(455.f);
-        oscs[1].SetFreq(1667.f);
+        oscBank.Init(sampleRate);
  
         ampEnv.Init(sampleRate);
         ampEnv.SetTime(0.008f);
@@ -34,21 +27,19 @@ public:
     }
 
     float Process() override {
-        float out = (oscs[0].Process() + oscs[1].Process()) * ampEnv.Process() * velocity;
+        float out = oscBank.Process() * ampEnv.Process() * velocity;
         out = lp.Process(out);
         return hp.Process(out);
     }
 
     void Trig(float velocity) override {
-        for (int i = 0; i < oscCount; i++) {
-            oscs[i].Reset();
-        }
+        oscBank.Reset();
         this->velocity = velocity;
         ampEnv.Trig();
     }
 private:
     static const int oscCount = 2;
-    Oscillator oscs[oscCount]; 
+    OscBank oscBank = OscBank({455, 1667});
     Decay ampEnv;
     Tone lp;
     ATone hp;
