@@ -62,7 +62,7 @@ public:
     float Process() override {
         float out = noise.Process();
         out = hp.Process(out);
-        return lp.Process(out) * ProcessAmp() * velocity * 1.4125f; // +3dB 
+        return lp.Process(out) * ProcessAmp() * velocity * 1.9f; // ++3dB ??
     }
 
     void Trig(float velocity) override {

@@ -20,17 +20,20 @@ public:
     }
 
     float Process() override {
-        return osc.Process() * ampEnv.Process();
+        return osc.Process() * ampEnv.Process() * 0.707;
     }
 
     void Trig(float velocity)  override {
         osc.Reset();
         osc.SetAmp(velocity);
         ampEnv.Trig();
+        this->velocity = velocity;
     }
 private:
     Oscillator osc; 
     Decay ampEnv;
+
+    float velocity = 1.f;
 
     float freq = 440;
 };

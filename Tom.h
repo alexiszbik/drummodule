@@ -24,7 +24,7 @@ public:
     float Process() override {
         int pitch = basePitch + pitchEnv.Process() * 24;
         osc.SetFreq(mtof(pitch));
-        return osc.Process() * ampEnv.Process();
+        return osc.Process() * ampEnv.Process() * 0.707 * velocity;
     }
 
     void Trig(float velocity) override {
@@ -32,11 +32,14 @@ public:
         osc.SetAmp(velocity);
         ampEnv.Trig();
         pitchEnv.Trig();
+        this->velocity = velocity;
     }
+
 private:
     Oscillator osc; 
     Decay pitchEnv;
     Decay ampEnv;
 
     float basePitch = 48;
+    float velocity = 1.0;
 };
