@@ -22,7 +22,7 @@ public:
     }
 
     float Process() override {
-        int pitch = basePitch + pitchEnv.Process() * 36;
+        int pitch = basePitch + pitchEnv.Process() * 40;
         osc.SetFreq(mtof(pitch));
         return osc.Process() * ampEnv.Process();
     }

@@ -8,19 +8,18 @@ using namespace std;
 class OscBank : ProcessBase {
 
 public:
-    OscBank(std::vector<float> frequencies) {
+    OscBank(std::vector<float> frequencies) : frequencies(frequencies) {
+        
+    }
+
+    void Init(float sampleRate) override {
         for (auto& freq : frequencies) {
             auto osc = new Oscillator();
+            osc->Init(sampleRate);
             osc->SetAmp(1);
             osc->SetWaveform(Oscillator::WAVE_SQUARE);
             osc->SetFreq(freq);
             oscs.push_back(osc);
-        }
-    }
-
-    void Init(float sampleRate) override {
-        for (auto& osc : oscs) {
-            osc->Init(sampleRate);
         }
     }
 
@@ -32,12 +31,13 @@ public:
         return out;
     }
 
-    void Reset() {
+    void Reset(float phase = 0 ) {
         for (auto& osc : oscs) {
-            osc->Reset();
+            osc->Reset(phase);
         }
     }
 
 private:
+    std::vector<float> frequencies; 
     std::vector<Oscillator*> oscs;
 };

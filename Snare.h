@@ -20,7 +20,7 @@ public:
         pitchEnv.SetTime(0.02);
 
         ampEnv.Init(sampleRate);
-        ampEnv.SetTime(0.15);
+        ampEnv.SetTime(0.13);
 
         hp.Init(sampleRate);
         float hpFreq = 200;

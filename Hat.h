@@ -11,7 +11,7 @@ using namespace daisysp;
 
 class Hat : public DrumBase {
 public:
-    Hat(bool isOpen = false) : DrumBase(), isOpen(isOpen) {
+    Hat() : DrumBase() {
     }
 
     void Init(float sampleRate) override {
@@ -20,7 +20,6 @@ public:
         bp.SetBandpass(7000.0f, 8.0f, sampleRate);
 
         ampEnv.Init(sampleRate);
-        ampEnv.SetTime(isOpen ? 0.6 : 0.09f);
 
         hp.Init(sampleRate);
 
@@ -35,7 +34,12 @@ public:
         return out * ampEnv.Process() * velocity * 3.981;
     }
 
-    void Trig(float velocity)  override {
+    void setIsOpen(bool isOpen) {
+        this->isOpen = isOpen;
+    }
+
+    void Trig(float velocity) {
+        ampEnv.SetTime(isOpen ? 0.6 : 0.1f);
         this->velocity = velocity;
         ampEnv.Trig();
         oscBank.Reset();

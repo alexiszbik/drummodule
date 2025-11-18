@@ -14,34 +14,29 @@ public:
         oscBank.Init(sampleRate);
  
         ampEnv.Init(sampleRate);
-        ampEnv.SetTime(0.008f);
+        ampEnv.SetTime(0.012f);
 
-        lp.Init(sampleRate);
         hp.Init(sampleRate);
 
-        float lpFreq = 4500.f;
-        lp.SetFreq(lpFreq);
-        float hpFreq = 600.f;
+        float hpFreq = 200.f;
         hp.SetFreq(hpFreq);
 
     }
 
     float Process() override {
-        float out = oscBank.Process() * ampEnv.Process() * velocity;
-        out = lp.Process(out);
+        float out = oscBank.Process() * ampEnv.Process() * velocity * 1;
+        //out = lp.Process(out);
         return hp.Process(out);
     }
 
     void Trig(float velocity) override {
-        oscBank.Reset();
+        oscBank.Reset(0.5);
         this->velocity = velocity;
         ampEnv.Trig();
     }
 private:
-    static const int oscCount = 2;
     OscBank oscBank = OscBank({455, 1667});
     Decay ampEnv;
-    Tone lp;
     ATone hp;
 
     float velocity = 1.f;
