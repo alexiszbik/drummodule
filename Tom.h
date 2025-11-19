@@ -11,7 +11,7 @@ public:
 
     void Init(float sampleRate) override {
         osc.Init(sampleRate);
-        osc.SetWaveform(osc.WAVE_SIN);
+        osc.SetWaveform(osc.WAVE_TRI);
         osc.SetAmp(1.f);
 
         pitchEnv.Init(sampleRate);

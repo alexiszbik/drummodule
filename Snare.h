@@ -30,7 +30,7 @@ public:
     float Process() override {
         int pitch = basePitch + pitchEnv.Process() * 29;
         osc.SetFreq(mtof(pitch));
-        float out = (osc.Process() + noise.Process()) * 0.707 * ampEnv.Process() * velocity;
+        float out = (osc.Process() + noise.Process()) * ampEnv.Process() * velocity;
         return hp.Process(out);
     }
 

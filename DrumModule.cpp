@@ -12,12 +12,9 @@
 #include "Cowbell.h"
 #include "Ride.h"
 
-// Use the daisy namespace to prevent having to type
-// daisy:: before all libdaisy functions
 using namespace daisy;
 using namespace daisysp;
 
-// Declare a DaisySeed object called hardware
 DaisySeed  hardware;
 
 static const int baseNote = 36;
@@ -67,6 +64,7 @@ DrumBase* drumMap[] = {
     &hat,
     &hat,
     &shaker,
+    &ride,
     &tom40,
     &tom44,
     &tom48,
@@ -75,12 +73,9 @@ DrumBase* drumMap[] = {
     &sin60,
     &sin96,
     &cowbell,
-    &ride
 };
 
 const short openHatIndex = 5; //Hardcoded, but hey ...
-
-//Missing : hat hh, hh open, ride ?, cowbell ?
 
 int drumCount = sizeof(drums) / sizeof(drums[0]);
 int drumMapCount = sizeof(drumMap) / sizeof(drumMap[0]);
@@ -91,13 +86,8 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                    AudioHandle::InterleavingOutputBuffer out,
                    size_t                                size)
 {
-
-    //Fill the block with samples
     for(size_t i = 0; i < size; i += 2)
     {
-        //Get the next envelope value
-        //get the next oscillator sample
-
         float osc_out = 0;
         for (int i = 0; i < drumCount; i++) {
             osc_out += drums[i]->Process();
@@ -105,7 +95,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         osc_out *= 0.707;
         osc_out = SoftClip(osc_out);
-        //Set the left and right outputs
+
         out[i]     = osc_out;
         out[i + 1] = osc_out;
     }
@@ -149,35 +139,27 @@ void InitMidi()
 
 int main(void)
 {
-    // Configure and Initialize the Daisy Seed
-    // These are separate to allow reconfiguration of any of the internal
-    // components before initialization.
     hardware.Configure();
     hardware.Init();
 
     InitMidi();
 
-    //How many samples we'll output per second
     float sampleRate = hardware.AudioSampleRate();
 
     for (int i = 0; i < drumCount; i++) {
         drums[i]->Init(sampleRate);
     }
-    
-    //Start calling the audio callback
+
     hardware.StartAudio(AudioCallback);
 
-    // Loop forever
     //midi.StartReceive();
     
     for(;;)
     {
         midi.Listen();
-        // Handle MIDI Events
         while(midi.HasEvents())
         {
             HandleMidiMessage(midi.PopEvent());
         }
-        //System::Delay(1);
     };
 }
